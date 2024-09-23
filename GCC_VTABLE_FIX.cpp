@@ -10,7 +10,7 @@ class BASE_class
 class FIRST_class : public BASE_class
 {
     public:
-        void method() { debug_printf_NDV ( "ВЫЗОВ %s\r", __PRETTY_FUNCTION__ ) ; }
+        void method() { /* НАШ ЗАВЕТНЫЙ МЕТОД ) */ }
 } ;
 
 FIRST_class FIRST_object;
@@ -22,8 +22,9 @@ class SECOND_class
         SECOND_class(BASE_class ** const array) : array(array) {}
         void method()
         {
-            for ( u8 i = 0; array[i] != nullptr; i++ )
-                array[i] -> method() ;
+            for ( int i = 0; array[i] != nullptr; i++ )
+                /// РАНЬШЕ ЗДЕСЬ СИСТЕМА "ПАДАЛА" В ИСКЛЮЧЕНИЕ, ПЫТАЯСЬ ВЫЗВАТЬ НЕСУЩЕСТВУЮЩИЙ МЕТОД
+                array[i] -> method();
         }
     private:
         BASE_class ** const array = nullptr;
@@ -35,8 +36,10 @@ void test_routine()
 {
     /// ЗДЕСЬ ИСПОЛЬЗУЕТСЯ ОПЕРАТОР «new» В ТАКОМ ФОРМАТЕ:
     /// void* operator new (size_t sz, void* p) { return p; }
+
     new (&FIRST_object) FIRST_class()/* ДОПОЛНИТЕЛЬНЫЙ ВЫЗОВ КОНСТРУКТОРА, ЧТОБЫ ВОССТАНОВИТЬ «object . Virtual_Method_Table» */;
+
     new (&SECOND_object) SECOND_class ( (BASE_class ** const)array ) ;
-    SECOND_object.method(); /// РАНЬШЕ ЗДЕСЬ СИСТЕМА "ПАДАЛА" В ИСКЛЮЧЕНИЕ, ПЫТАЯСЬ ВЫЗВАТЬ НЕСУЩЕСТВУЮЩИЙ МЕТОД
+    SECOND_object.method();
 }
 
