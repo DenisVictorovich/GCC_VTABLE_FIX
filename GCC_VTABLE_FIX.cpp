@@ -1,8 +1,6 @@
 
 /* GCC_VTABLE_FIX.cpp */
 
-#pragma once
-
 class BASE_class
 {
     public:
@@ -39,6 +37,6 @@ void test_routine()
     /// void* operator new (size_t sz, void* p) { return p; }
     new (&FIRST_object) FIRST_class()/* ДОПОЛНИТЕЛЬНЫЙ ВЫЗОВ КОНСТРУКТОРА, ЧТОБЫ ВОССТАНОВИТЬ «object . Virtual_Method_Table» */;
     new (&SECOND_object) SECOND_class ( (BASE_class ** const)array ) ;
-    SECOND_object.method();
+    SECOND_object.method(); /// РАНЬШЕ ЗДЕСЬ СИСТЕМА "ПАДАЛА" В ИСКЛЮЧЕНИЕ, ПЫТАЯСЬ ВЫЗВАТЬ НЕСУЩЕСТВУЮЩИЙ МЕТОД
 }
 
